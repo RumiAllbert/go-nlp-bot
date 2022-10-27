@@ -8,7 +8,6 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-* Go 1.1.2+
 API Keys for the following APIs:
 * [Slack API](https://api.slack.com/)
 * [Wit.ai](https://wit.ai/)
