@@ -1,10 +1,4 @@
 # AI Slack Bot
-<!-- add golang badge -->
-[![Go Report Card](https://goreportcard.com/badge/github.com/ai-slack-bot)](https://goreportcard.com/report/github.com/ai-slack-bot)
-[![GoDoc](https://godoc.org/github.com/ai-slack-bot?status.svg)](https://godoc.org/github.com/ai-slack-bot)
-[![Build Status](https://travis-ci.org/ai-slack-bot.svg?branch=master)](https://travis-ci.org/ai-slack-bot)
-[![Coverage Status](https://coveralls.io/repos/github/ai-slack-bot/badge.svg?branch=master)](https://coveralls.io/github/ai-slack-bot?branch=master)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/ai-slack-bot/master/LICENSE)
 
 This is a Slack bot that uses the [Slack API](https://api.slack.com/) to interact with the [Slack](https://slack.com/) messaging platform. It takes the message, or query from the user, then it uses the [Wit.ai](https://wit.ai/) API to extract the intent and entities from the message. The intent and entities are then used to determine the appropriate response from the bot. Once the response from the bot has been determined, the query is sent to Wolfram|Alpha to get the answer to the query. The answer is then sent back to the user.
 
