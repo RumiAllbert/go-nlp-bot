@@ -31,15 +31,14 @@ func printCommandEvents(analyticsChannel <-chan *slacker.CommandEvent) {
 
 func main() {
 	godotenv.Load(".env")
-	// Create bot, client, and wolfram client
-	bot := slacker.NewClient(os.Getenv("STACK_BOT_TOKEN"), os.Getenv("SLACK_APP_TOKEN"))
+
+	bot := slacker.NewClient(os.Getenv("SLACK_BOT_TOKEN"), os.Getenv("SLACK_APP_TOKEN"))
 	client := witai.NewClient(os.Getenv("WIT_AI_TOKEN"))
 	wolframClient := &wolfram.Client{AppID: os.Getenv("WOLFRAM_APP_ID")}
 	go printCommandEvents(bot.CommandEvents())
 
-	// Create bot commands
 	bot.Command("<message>", &slacker.CommandDefinition{
-		Description: "Send any query to Wolfram",
+		Description: "send any question to wolfram",
 		Handler: func(botCtx slacker.BotContext, request slacker.Request, response slacker.ResponseWriter) {
 			query := request.Param("message")
 
@@ -48,15 +47,28 @@ func main() {
 			})
 			data, _ := json.MarshalIndent(msg, "", "    ")
 			rough := string(data[:])
-			value := gjson.Get(rough, "entities.wit$wolfram_search_query:wolfram_search_query.0.value")
-			answer := value.String()
-			res, err := wolframClient.GetSpokentAnswerQuery(answer, wolfram.Metric, 1000)
-			if err != nil {
-				fmt.Println("there is an error")
+			fmt.Println(rough)
+			// get the value in the json response with the highest confidence
+			start := gjson.Get(rough, "entities.wit$wolfram_search_query:wolfram_search_query.0.start")
+			if start.Int() == 0 {
+				value := gjson.Get(rough, "entities.wit$wolfram_search_query:wolfram_search_query.1.value")
+				answer := value.String()
+				res, err := wolframClient.GetSpokentAnswerQuery(answer, wolfram.Metric, 1000)
+				if err != nil {
+					fmt.Println("there is an error")
+				}
+				fmt.Println(value)
+				response.Reply(res)
+			} else {
+				value := gjson.Get(rough, "entities.wit$wolfram_search_query:wolfram_search_query.0.value")
+				answer := value.String()
+				res, err := wolframClient.GetSpokentAnswerQuery(answer, wolfram.Metric, 1000)
+				if err != nil {
+					fmt.Println("there is an error")
+				}
+				fmt.Println(value)
+				response.Reply(res)
 			}
-			fmt.Println(value)
-			fmt.Println(res)
-			response.Reply(res)
 		},
 	})
 
@@ -64,6 +76,7 @@ func main() {
 	defer cancel()
 
 	err := bot.Listen(ctx)
+
 	if err != nil {
 		log.Fatal(err)
 	}
