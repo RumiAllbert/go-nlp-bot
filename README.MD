@@ -9,6 +9,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 API Keys for the following APIs:
+
 * [Slack API](https://api.slack.com/)
 * [Wit.ai](https://wit.ai/)
 * [Wolfram|Alpha](https://developer.wolframalpha.com/portal/apisignup.html)
