@@ -1,6 +1,6 @@
 # AI Slack Bot
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/ai-slack-bot)](https://goreportcard.com/report/github.com/ai-slack-bot)
+[![Go Report Card](https://goreportcard.com/badge/github.com/rumiallbert/ai-slack-bot)](https://goreportcard.com/report/github.com/rumiallbert/ai-slack-bot)
 
 This is a Slack bot that uses the [Slack API](https://api.slack.com/) to interact with the [Slack](https://slack.com/) messaging platform. It takes the message, or query from the user, then it uses the [Wit.ai](https://wit.ai/) API to extract the intent and entities from the message. The intent and entities are then used to determine the appropriate response from the bot. Once the response from the bot has been determined, the query is sent to Wolfram|Alpha to get the answer to the query. The answer is then sent back to the user.
 
