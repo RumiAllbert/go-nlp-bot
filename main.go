@@ -14,8 +14,10 @@ import (
 	witai "github.com/wit-ai/wit-go/v2"
 )
 
+// Create wolfram client
 var wolframClient *wolfram.Client
 
+// Printing for command events in Slack
 func printCommandEvents(analyticsChannel <-chan *slacker.CommandEvent) {
 	for event := range analyticsChannel {
 		fmt.Println("Command Events")
@@ -29,11 +31,13 @@ func printCommandEvents(analyticsChannel <-chan *slacker.CommandEvent) {
 
 func main() {
 	godotenv.Load(".env")
+	// Create bot, client, and wolfram client
 	bot := slacker.NewClient(os.Getenv("STACK_BOT_TOKEN"), os.Getenv("SLACK_APP_TOKEN"))
 	client := witai.NewClient(os.Getenv("WIT_AI_TOKEN"))
 	wolframClient := &wolfram.Client{AppID: os.Getenv("WOLFRAM_APP_ID")}
 	go printCommandEvents(bot.CommandEvents())
 
+	// Create bot commands
 	bot.Command("<message>", &slacker.CommandDefinition{
 		Description: "Send any query to Wolfram",
 		Handler: func(botCtx slacker.BotContext, request slacker.Request, response slacker.ResponseWriter) {
@@ -44,7 +48,6 @@ func main() {
 			})
 			data, _ := json.MarshalIndent(msg, "", "    ")
 			rough := string(data[:])
-			fmt.Println(rough)
 			value := gjson.Get(rough, "entities.wit$wolfram_search_query:wolfram_search_query.0.value")
 			answer := value.String()
 			res, err := wolframClient.GetSpokentAnswerQuery(answer, wolfram.Metric, 1000)
@@ -59,6 +62,7 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
 	err := bot.Listen(ctx)
 	if err != nil {
 		log.Fatal(err)
